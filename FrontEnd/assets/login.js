@@ -27,16 +27,19 @@ loginForm.addEventListener("submit", (event) => {
   })
     .then((response) => {
       if (response.ok) {
-        window.location.href = "./index.html";
-        console.log("Login successful");
-        alert("Vous êtes maintenant connecté");
+        return response.json();
       } else {
-        throw new Error("Login failed");
+        throw new Error("Email ou mot de passe incorrect");
       }
+    })
+    .then((data) => {
+      const token = data.token;
+      localStorage.setItem("token", token);
+      window.location.href = `index.html`;
     })
     .catch((error) => {
       console.error(error);
       // Affiche une erreur s'il y en a une
-      alert("Email ou mot de passe incorrect");
+      alert(error.message);
     });
 });
