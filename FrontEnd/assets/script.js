@@ -1,4 +1,5 @@
 let works = [];
+let modal = null;
 
 // Evènement pour executer le code une fois que le DOM est chargé.
 window.addEventListener("DOMContentLoaded", () => {
@@ -8,10 +9,28 @@ window.addEventListener("DOMContentLoaded", () => {
   if (token) {
     // @TODO: Faire la mise en page pour un utilisateur connecté.
     // Il est préférable de cacher (dans le HTML) les éléments qui ne sont pas nécessaires pour l'utilisateur connecté, avant de les afficher si l'utilisateur est connecté.
+    const openModal = document.querySelectorAll(".open-modal");
+    openModal.forEach((modal) => {
+      modal.style.display = "block";
+      modal.addEventListener("click", displayModal);
+    });
   } else {
     getCategories();
   }
 });
+
+function displayModal() {
+  const modal = document.querySelector(".modal");
+  modal.style.display = null;
+  modal.removeAttribute("aria-hidden");
+  modal.setAttribute("aria-modal", true);
+  const closeModal = document.querySelector(".btn-close");
+  closeModal.addEventListener("click", () => {
+    modal.style.display = "none";
+    modal.setAttribute("aria-hidden", true);
+    modal.removeAttribute("aria-modal");
+  });
+}
 
 // Fetchs
 
@@ -52,7 +71,7 @@ function getCategories() {
       filters.innerHTML = `<button class="filter all">Tous</button>`;
       // Ajout de l'évènement pour afficher tous les travaux.
       const filterAll = document.querySelector(".all");
-      filterAll.addEventListener("click", renderWorks);
+      filterAll.addEventListener("click", getWorks);
       // Ajout des filtres de catégories.
       data.forEach((category) => {
         const option = document.createElement("button");
