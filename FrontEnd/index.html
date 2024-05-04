@@ -59,8 +59,13 @@
       <section id="portfolio">
         <div class="modal-header">
           <h2>Mes Projets</h2>
-          <i class="fa-regular fa-pen-to-square open-modal"></i>
-          <p class="open-modal">modifier</p>
+          <i
+            class="fa-regular fa-pen-to-square open-modal"
+            style="display: none"
+          ></i>
+          <p class="open-modal" style="cursor: pointer; display: none">
+            modifier
+          </p>
         </div>
         <aside
           id="modal 1"
@@ -73,7 +78,11 @@
         >
           <div class="modal-wrapper">
             <i class="fa-solid fa-xmark btn-close"></i>
-            <h3 id="titlemodal">Gallerie photo</h3>
+            <h3 id="titlemodal">Galerie photo</h3>
+            <div class="modal-gallery__wrapper">
+              <div class="modal-gallery"></div>
+            </div>
+            <div class="modal-separator"></div>
             <hr />
             <button class="btn-modal">Ajouter une photo</button>
           </div>

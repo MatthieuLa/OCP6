@@ -19,6 +19,8 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+// ---------------------  Modal ---------------------
+
 function displayModal() {
   const modal = document.querySelector(".modal");
   modal.style.display = null;
@@ -32,9 +34,29 @@ function displayModal() {
   });
 }
 
-// Fetchs
+// ---------------------  Fetch Modal ---------------------
+
+fetch("http://localhost:5678/api/works")
+  .then((response) => response.json())
+  .then((works) => {
+    const modalGallery = document.querySelector(".modal-gallery");
+    works.forEach((work) => {
+      const figureGallery = document.createElement("figure");
+      figureGallery.innerHTML = `
+      <div class="modal-trash">
+      <i class="fa-solid fa-trash-can"></i></div>
+          <img src="${work.imageUrl}" alt="${work.title}" class
+          ="modal-image" />
+          
+        `;
+      modalGallery.appendChild(figureGallery);
+    });
+  });
+
+// ------------------------------------------
 
 // Fonction pour récupérer les travaux.
+
 function getWorks() {
   fetch("http://localhost:5678/api/works")
     .then((response) => response.json())
@@ -44,6 +66,8 @@ function getWorks() {
     });
 }
 
+// Fonction pour afficher les travaux.
+
 function renderWorks(works) {
   const gallery = document.querySelector(".gallery");
   gallery.innerHTML = "";
@@ -51,6 +75,7 @@ function renderWorks(works) {
 }
 
 // Fonction pour ajouter un travail à la galerie.
+
 function addWorkToGallery(work) {
   const gallery = document.querySelector(".gallery");
   const figureGallery = document.createElement("figure");
