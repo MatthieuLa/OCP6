@@ -67,8 +67,11 @@
             modifier
           </p>
         </div>
+
+        <!-- Modal 1 et 2 -->
+
         <aside
-          id="modal 1"
+          id="modal-1"
           class="modal"
           aria-hidden="true"
           role="dialog"
@@ -78,7 +81,7 @@
         >
           <div class="modal-wrapper">
             <i class="fa-solid fa-xmark btn-close"></i>
-            <h3 id="titlemodal">Galerie photo</h3>
+            <h3 class="titlemodal">Galerie photo</h3>
             <div class="modal-gallery__wrapper">
               <div class="modal-gallery"></div>
             </div>
@@ -87,6 +90,47 @@
             <button class="btn-modal">Ajouter une photo</button>
           </div>
         </aside>
+        <aside
+          id="modal-2"
+          class="modal"
+          aria-hidden="true"
+          role="dialog"
+          aria-modal="false"
+          aria-labelledby="titlemodal"
+          style="display: none"
+        >
+          <div class="modal-wrapper">
+            <div class="icons-wrapper">
+              <i
+                class="fa-solid fa-arrow-left btn-back"
+                style="cursor: pointer"
+              ></i>
+              <i class="fa-solid fa-xmark btn-close"></i>
+            </div>
+            <h3 class="titlemodal">Ajout photo</h3>
+            <div class="modal-gallery__wrapper">
+              <div class="modal-upload">
+                <i class="fa-regular fa-image"></i>
+                <button class="btn-upload">+ Ajouter photo</button>
+                <p>jpg, png : 4 mo max</p>
+              </div>
+              <div class="modal-form">
+                <form action="#" method="">
+                  <label for="title">Titre</label>
+                  <input type="text" />
+                  <label for="category">Catégorie</label>
+                  <input type="text" />
+                </form>
+              </div>
+            </div>
+            <div class="modal-separator"></div>
+            <hr />
+            <button class="btn-modal__validate">Valider</button>
+          </div>
+        </aside>
+
+        <!-- Fin de la modal -->
+
         <div class="filters"></div>
         <div class="gallery"></div>
       </section>

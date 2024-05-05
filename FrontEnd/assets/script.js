@@ -19,22 +19,16 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// ---------------------  Modal ---------------------
+// ---------------------  Modal --------------------- //
 
 function displayModal() {
   const modal = document.querySelector(".modal");
   modal.style.display = null;
   modal.removeAttribute("aria-hidden");
   modal.setAttribute("aria-modal", true);
-  const closeModal = document.querySelector(".btn-close");
-  closeModal.addEventListener("click", () => {
-    modal.style.display = "none";
-    modal.setAttribute("aria-hidden", true);
-    modal.removeAttribute("aria-modal");
-  });
 }
 
-// ---------------------  Fetch Modal ---------------------
+// ---------------------  Fetch Modal --------------------- //
 
 fetch("http://localhost:5678/api/works")
   .then((response) => response.json())
@@ -53,7 +47,51 @@ fetch("http://localhost:5678/api/works")
     });
   });
 
-// ------------------------------------------
+// -------------- Modal btn -------------- //
+
+// Je cache la modal 1
+
+const btnModal = document.querySelector(".btn-modal");
+btnModal.addEventListener("click", () => {
+  const modal1 = document.querySelector("#modal-1");
+  modal1.style.display = "none";
+  modal1.setAttribute("aria-hidden", true);
+  modal1.removeAttribute("aria-modal");
+
+  // J'affiche la modal 2
+
+  const modal2 = document.querySelector("#modal-2");
+  modal2.style.display = null;
+  modal2.setAttribute("aria-modal", true);
+  modal2.removeAttribute("aria-hidden");
+
+  // Le bouton de retour de modal 2 pour revenir sur la modal 1
+
+  const backButton = document.querySelector(".btn-back");
+  backButton.addEventListener("click", () => {
+    modal1.style.display = null;
+    modal1.setAttribute("aria-modal", true);
+    modal1.removeAttribute("aria-hidden");
+    modal2.style.display = "none";
+    modal2.setAttribute("aria-hidden", true);
+    modal2.removeAttribute("aria-modal");
+  });
+});
+
+// Boutons de fermeture des modales
+const modal1 = document.querySelector("#modal-1");
+const modal2 = document.querySelector("#modal-2");
+const closeButtons = document.querySelectorAll(".btn-close");
+closeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    modal1.style.display = "none";
+    modal1.setAttribute("aria-hidden", true);
+    modal1.removeAttribute("aria-modal");
+    modal2.style.display = "none";
+    modal2.setAttribute("aria-hidden", true);
+    modal2.removeAttribute("aria-modal");
+  });
+});
 
 // Fonction pour récupérer les travaux.
 
