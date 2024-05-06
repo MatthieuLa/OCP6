@@ -44,6 +44,17 @@ fetch("http://localhost:5678/api/works")
           
         `;
       modalGallery.appendChild(figureGallery);
+
+      // -------------- Supprimer un travail depuis la modal -------------- //
+
+      // J'intégre le bouton de suppression dans la modal à partir du fetch de l'api pour que cela fonctionne
+
+      const trashModal = figureGallery.querySelector(".modal-trash");
+      trashModal.addEventListener("click", () => {
+        // J'appelle la fonciton deleteWork avec l'id du work fetch dans l'api
+        deleteWork(work.id);
+        figureGallery.remove();
+      });
     });
   });
 
