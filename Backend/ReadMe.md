@@ -14,6 +14,9 @@ Compte de test pour Sophie Bluel
 email: sophie.bluel@test.tld
 
 password: S0phie
+
+Cmd pour récupérer la database avec les works: git checkout upstream/master -- ./Backend/database.sqlite
+
 ```
 
 Lien pour voir la
