@@ -1,3 +1,5 @@
+// --------------------- Variables --------------------- //
+
 let works = [];
 let modal = null;
 
@@ -33,6 +35,7 @@ function displayModal() {
 fetch("http://localhost:5678/api/works")
   .then((response) => response.json())
   .then((works) => {
+    // Fonction renderWorksInModal
     const modalGallery = document.querySelector(".modal-gallery");
     works.forEach((work) => {
       const figureGallery = document.createElement("figure");
@@ -51,58 +54,82 @@ fetch("http://localhost:5678/api/works")
 
       const trashModal = figureGallery.querySelector(".modal-trash");
       trashModal.addEventListener("click", () => {
-        // J'appelle la fonciton deleteWork avec l'id du work fetch dans l'api
-        deleteWork(work.id);
-        figureGallery.remove();
+        // J'appelle la fonction deleteWork avec l'id du work fetch dans l'api
+        if (confirm("Voulez-vous vraiment supprimer cette photo ?")) {
+          deleteWork(work.id)
+            .then(() => {
+              figureGallery.remove();
+            })
+            .catch((error) => {
+              console.error(error.message);
+            });
+        }
       });
     });
   });
 
-// -------------- Modal btn -------------- //
+// --------------------- Event Listeners --------------------- //
 
-// Je cache la modal 1
+addEventListener("click", backToGallery);
+addEventListener("click", btnModal);
+addEventListener("click", closeModal);
 
-const btnModal = document.querySelector(".btn-modal");
-btnModal.addEventListener("click", () => {
+// --------------------- Fonctions --------------------- //
+
+// Boutons de fermeture des modales
+
+function closeModal() {
   const modal1 = document.querySelector("#modal-1");
-  modal1.style.display = "none";
-  modal1.setAttribute("aria-hidden", true);
-  modal1.removeAttribute("aria-modal");
-
-  // J'affiche la modal 2
-
   const modal2 = document.querySelector("#modal-2");
-  modal2.style.display = null;
-  modal2.setAttribute("aria-modal", true);
-  modal2.removeAttribute("aria-hidden");
+  const closeButtons = document.querySelectorAll(".btn-close");
+  closeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      modal1.style.display = "none";
+      modal1.setAttribute("aria-hidden", true);
+      modal1.removeAttribute("aria-modal");
+      modal2.style.display = "none";
+      modal2.setAttribute("aria-hidden", true);
+      modal2.removeAttribute("aria-modal");
+    });
+  });
+}
 
-  // Le bouton de retour de modal 2 pour revenir sur la modal 1
+// Fonction pour afficher la modal 2 et cacher la modal 1
 
+function btnModal() {
+  // Je cache la modal 1
+
+  const btnModal = document.querySelector(".btn-modal");
+  btnModal.addEventListener("click", () => {
+    const modal1 = document.querySelector("#modal-1");
+    modal1.style.display = "none";
+    modal1.setAttribute("aria-hidden", true);
+    modal1.removeAttribute("aria-modal");
+
+    // J'affiche la modal 2
+
+    const modal2 = document.querySelector("#modal-2");
+    modal2.style.display = null;
+    modal2.setAttribute("aria-modal", true);
+    modal2.removeAttribute("aria-hidden");
+  });
+}
+
+// Fonction pour revenir à la galerie depuis la modal 2
+
+function backToGallery() {
   const backButton = document.querySelector(".btn-back");
-  backButton.addEventListener("click", () => {
+  const modal1 = document.querySelector("#modal-1");
+  const modal2 = document.querySelector("#modal-2");
+  backButton.onclick = () => {
     modal1.style.display = null;
     modal1.setAttribute("aria-modal", true);
     modal1.removeAttribute("aria-hidden");
     modal2.style.display = "none";
     modal2.setAttribute("aria-hidden", true);
     modal2.removeAttribute("aria-modal");
-  });
-});
-
-// Boutons de fermeture des modales
-const modal1 = document.querySelector("#modal-1");
-const modal2 = document.querySelector("#modal-2");
-const closeButtons = document.querySelectorAll(".btn-close");
-closeButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    modal1.style.display = "none";
-    modal1.setAttribute("aria-hidden", true);
-    modal1.removeAttribute("aria-modal");
-    modal2.style.display = "none";
-    modal2.setAttribute("aria-hidden", true);
-    modal2.removeAttribute("aria-modal");
-  });
-});
+  };
+}
 
 // Fonction pour récupérer les travaux.
 
@@ -112,6 +139,7 @@ function getWorks() {
     .then((data) => {
       works = data;
       renderWorks(works);
+      // renderWorksInModal(works);
     });
 }
 
@@ -167,12 +195,18 @@ function filterGallery(categoryId) {
   renderWorks(filteredWorks);
 }
 
-function deleteWork(id) {
+async function deleteWork(id) {
   // Exemple de requête DELETE avec le jeton d'authentification passé en en-tête.
-  fetch(`http://localhost:5678/api/works/${id}`, {
+  const response = await fetch(`http://localhost:5678/api/works/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
-  }).then((response) => null);
+  });
+  if (response.ok) {
+    works = works.filter((work) => work.id !== id);
+    renderWorks(works);
+  } else {
+    throw Error("Une erreur est survenue lors de la suppression d'une photo.");
+  }
 }
