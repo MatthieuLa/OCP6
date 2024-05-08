@@ -25,7 +25,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 function displayModal() {
   const modal = document.querySelector(".modal");
-  modal.style.display = null;
+  modal.style.display = "flex";
   modal.removeAttribute("aria-hidden");
   modal.setAttribute("aria-modal", true);
 }
@@ -73,14 +73,46 @@ fetch("http://localhost:5678/api/works")
 addEventListener("click", backToGallery);
 addEventListener("click", btnModal);
 addEventListener("click", closeModal);
+addEventListener("click", uploadWork);
 
 // --------------------- Fonctions --------------------- //
+
+// Fonction qui ajoute les catégories de travaux dynamiquement en fonction de l'api.
+
+function modalCategory() {
+  const modalCategory = document.querySelector("#modal-category");
+  // Si la modal contient déjà des enfants, on ne fait rien (permet d'éviter de dupliquer les catégories à chaque ouverture de la modal)
+  if (modalCategory.children.length > 0) return;
+  modalCategory.innerHTML = "";
+
+  fetch("http://localhost:5678/api/categories")
+    .then((response) => response.json())
+    .then((data) => {
+      data.forEach((category) => {
+        const option = document.createElement("option");
+        option.value = category.id;
+        option.textContent = category.name;
+        modalCategory.appendChild(option);
+      });
+    });
+}
+
+// Fonction pour uploader un travail [WIP].
+
+function uploadWork() {
+  const btnUpload = document.querySelector(".btn-upload");
+  const fileInput = document.querySelector("#file-input");
+
+  btnUpload.addEventListener("click", () => {
+    fileInput.click();
+  });
+}
 
 // Boutons de fermeture des modales
 
 function closeModal() {
-  const modal1 = document.querySelector("#modal-1");
-  const modal2 = document.querySelector("#modal-2");
+  const modal1 = document.querySelector("#modal-gallery");
+  const modal2 = document.querySelector("#modal-upload");
   const closeButtons = document.querySelectorAll(".btn-close");
   closeButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -101,17 +133,18 @@ function btnModal() {
 
   const btnModal = document.querySelector(".btn-modal");
   btnModal.addEventListener("click", () => {
-    const modal1 = document.querySelector("#modal-1");
+    const modal1 = document.querySelector("#modal-gallery");
     modal1.style.display = "none";
     modal1.setAttribute("aria-hidden", true);
     modal1.removeAttribute("aria-modal");
 
     // J'affiche la modal 2
 
-    const modal2 = document.querySelector("#modal-2");
-    modal2.style.display = null;
+    const modal2 = document.querySelector("#modal-upload");
+    modal2.style.display = "flex";
     modal2.setAttribute("aria-modal", true);
     modal2.removeAttribute("aria-hidden");
+    modalCategory();
   });
 }
 
@@ -119,8 +152,8 @@ function btnModal() {
 
 function backToGallery() {
   const backButton = document.querySelector(".btn-back");
-  const modal1 = document.querySelector("#modal-1");
-  const modal2 = document.querySelector("#modal-2");
+  const modal1 = document.querySelector("#modal-gallery");
+  const modal2 = document.querySelector("#modal-upload");
   backButton.onclick = () => {
     modal1.style.display = null;
     modal1.setAttribute("aria-modal", true);

@@ -376,10 +376,12 @@ p {
   margin: 2em 0 1em 0;
 }
 
-.modal input {
+.modal input,
+.modal select {
   height: 50px;
   font-size: 1.2em;
   border: none;
+  background: #fff;
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 

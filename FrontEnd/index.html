@@ -71,7 +71,7 @@
         <!-- Modal 1 et 2 -->
 
         <aside
-          id="modal-1"
+          id="modal-gallery"
           class="modal"
           aria-hidden="true"
           role="dialog"
@@ -91,7 +91,7 @@
           </div>
         </aside>
         <aside
-          id="modal-2"
+          id="modal-upload"
           class="modal"
           aria-hidden="true"
           role="dialog"
@@ -111,7 +111,14 @@
             <div class="modal-gallery__wrapper">
               <div class="modal-upload">
                 <i class="fa-regular fa-image"></i>
-                <button class="btn-upload">+ Ajouter photo</button>
+                <button class="btn-upload">
+                  <input
+                    type="file"
+                    id="file-input"
+                    style="display: none"
+                    accept="image/png, image/jpeg"
+                  />+ Ajouter photo
+                </button>
                 <p>jpg, png : 4 mo max</p>
               </div>
               <div class="modal-form">
@@ -119,7 +126,7 @@
                   <label for="title">Titre</label>
                   <input type="text" />
                   <label for="category">Catégorie</label>
-                  <input type="text" />
+                  <select name="category" id="modal-category"></select>
                 </form>
               </div>
             </div>
