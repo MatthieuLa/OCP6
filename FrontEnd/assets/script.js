@@ -2,6 +2,9 @@
 
 let works = [];
 let modal = null;
+let uploadWorkInitialized = false; // Variable pour savoir si la fonction uploadWork a déjà été initialisée.
+
+// ---------------------  DOM Listener --------------------- //
 
 // Evènement pour executer le code une fois que le DOM est chargé.
 window.addEventListener("DOMContentLoaded", () => {
@@ -9,8 +12,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const token = localStorage.getItem("token");
   getWorks();
   if (token) {
-    // @TODO: Faire la mise en page pour un utilisateur connecté.
-    // Il est préférable de cacher (dans le HTML) les éléments qui ne sont pas nécessaires pour l'utilisateur connecté, avant de les afficher si l'utilisateur est connecté.
     const openModal = document.querySelectorAll(".open-modal");
     openModal.forEach((modal) => {
       modal.style.display = "block";
@@ -75,6 +76,19 @@ addEventListener("click", btnModal);
 addEventListener("click", closeModal);
 addEventListener("click", uploadWork);
 
+// --------------------- QuerySelectors --------------------- //
+
+const btnUpload = document.querySelector(".btn-upload");
+const fileInput = document.querySelector("#file-input");
+const uploadIcon = document.querySelector(".upload-icon");
+const modalUploaded = document.querySelector(".modal-uploaded");
+const uploadRestriction = document.querySelector(".upload-restriction");
+const btnValidate = document.querySelector(".btn-modal__validate");
+const modalGallery = document.querySelector("#modal-gallery");
+const modalUpload = document.querySelector("#modal-upload");
+const closeButtons = document.querySelectorAll(".btn-close");
+const titleInput = document.querySelector('input[type="text"]');
+
 // --------------------- Fonctions --------------------- //
 
 // Fonction qui ajoute les catégories de travaux dynamiquement en fonction de l'api.
@@ -100,28 +114,84 @@ function modalCategory() {
 // Fonction pour uploader un travail [WIP].
 
 function uploadWork() {
-  const btnUpload = document.querySelector(".btn-upload");
-  const fileInput = document.querySelector("#file-input");
+  // Si uploadWorkInitialized est faux, on initialise les évènements.
+  if (!uploadWorkInitialized) {
+    btnUpload.addEventListener("click", () => {
+      fileInput.click();
+      uploadIcon.style.display = "none";
+      btnUpload.style.display = "none";
+      uploadRestriction.style.display = "none";
+    });
 
-  btnUpload.addEventListener("click", () => {
-    fileInput.click();
-  });
+    // Vérification de la taille du fichier
+
+    fileInput.addEventListener("change", function () {
+      const maxFileSize = 4 * 1024 * 1024; // 4MB
+
+      if (this.files[0].size > maxFileSize) {
+        alert(
+          "Le fichier est trop gros, veuillez choisir un fichier de moins de 4MB."
+        );
+        this.value = "";
+      } else {
+        const fileURL = URL.createObjectURL(this.files[0]);
+        modalUploaded.src = fileURL;
+        modalUploaded.style.display = "block";
+        // Création des éléments img et figcaption
+        const figure = document.createElement("figure");
+        const img = document.createElement("img");
+        const figCaption = document.createElement("figcaption");
+
+        // Je renseigne la source de l'image
+        img.src = fileURL;
+
+        // Je récupère la valeur de l'input dans le formulaire pour le titre
+        const titleInputValue =
+          document.querySelector('input[type="text"]').value;
+        figCaption.innerText = titleInputValue;
+
+        // J'ajoute l'img et le figcaption dans la gallery
+        figure.appendChild(img);
+        figure.appendChild(figCaption);
+        document.querySelector(".gallery").appendChild(figure);
+      }
+    });
+    // J'indique que la fonction a été initialisée. Cela évite de répéter l'ajout des évènements et d'uploader plusieurs fois le même travail.
+    uploadWorkInitialized = true;
+  }
+  validateUpload();
+}
+// Bouton valider pour la modal 2, il est important de le nesté ici pour bien afficher la modal
+btnValidate.addEventListener("click", validateUpload);
+
+function validateUpload(event) {
+  // Empêchez l'action par défaut du bouton validate pour éviter la boucle alert
+  event.preventDefault();
+
+  // Vérification du titre
+  if (titleInput.value.trim() === "") {
+    alert("Veuillez renseigner un titre");
+    return;
+  }
+
+  modalUploaded.style.display = "none";
+  fileInput.value = "";
+  uploadIcon.style.display = "block";
+  btnUpload.style.display = "block";
+  uploadRestriction.style.display = "block";
 }
 
 // Boutons de fermeture des modales
 
 function closeModal() {
-  const modal1 = document.querySelector("#modal-gallery");
-  const modal2 = document.querySelector("#modal-upload");
-  const closeButtons = document.querySelectorAll(".btn-close");
   closeButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      modal1.style.display = "none";
-      modal1.setAttribute("aria-hidden", true);
-      modal1.removeAttribute("aria-modal");
-      modal2.style.display = "none";
-      modal2.setAttribute("aria-hidden", true);
-      modal2.removeAttribute("aria-modal");
+      modalGallery.style.display = "none";
+      modalGallery.setAttribute("aria-hidden", true);
+      modalGallery.removeAttribute("aria-modal");
+      modalUpload.style.display = "none";
+      modalUpload.setAttribute("aria-hidden", true);
+      modalUpload.removeAttribute("aria-modal");
     });
   });
 }
@@ -133,17 +203,15 @@ function btnModal() {
 
   const btnModal = document.querySelector(".btn-modal");
   btnModal.addEventListener("click", () => {
-    const modal1 = document.querySelector("#modal-gallery");
-    modal1.style.display = "none";
-    modal1.setAttribute("aria-hidden", true);
-    modal1.removeAttribute("aria-modal");
+    modalGallery.style.display = "none";
+    modalGallery.setAttribute("aria-hidden", true);
+    modalGallery.removeAttribute("aria-modal");
 
     // J'affiche la modal 2
 
-    const modal2 = document.querySelector("#modal-upload");
-    modal2.style.display = "flex";
-    modal2.setAttribute("aria-modal", true);
-    modal2.removeAttribute("aria-hidden");
+    modalUpload.style.display = "flex";
+    modalUpload.setAttribute("aria-modal", true);
+    modalUpload.removeAttribute("aria-hidden");
     modalCategory();
   });
 }
@@ -152,15 +220,13 @@ function btnModal() {
 
 function backToGallery() {
   const backButton = document.querySelector(".btn-back");
-  const modal1 = document.querySelector("#modal-gallery");
-  const modal2 = document.querySelector("#modal-upload");
   backButton.onclick = () => {
-    modal1.style.display = null;
-    modal1.setAttribute("aria-modal", true);
-    modal1.removeAttribute("aria-hidden");
-    modal2.style.display = "none";
-    modal2.setAttribute("aria-hidden", true);
-    modal2.removeAttribute("aria-modal");
+    modalGallery.style.display = null;
+    modalGallery.setAttribute("aria-modal", true);
+    modalGallery.removeAttribute("aria-hidden");
+    modalUpload.style.display = "none";
+    modalUpload.setAttribute("aria-hidden", true);
+    modalUpload.removeAttribute("aria-modal");
   };
 }
 

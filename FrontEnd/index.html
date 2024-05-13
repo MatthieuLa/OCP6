@@ -110,21 +110,22 @@
             <h3 class="titlemodal">Ajout photo</h3>
             <div class="modal-gallery__wrapper">
               <div class="modal-upload">
-                <i class="fa-regular fa-image"></i>
+                <img src="#" alt="" class="modal-uploaded" />
+                <i class="fa-regular fa-image upload-icon"></i>
                 <button class="btn-upload">
                   <input
                     type="file"
                     id="file-input"
                     style="display: none"
-                    accept="image/png, image/jpeg"
+                    accept=""
                   />+ Ajouter photo
                 </button>
-                <p>jpg, png : 4 mo max</p>
+                <p class="upload-restriction">jpg, png : 4 mo max</p>
               </div>
               <div class="modal-form">
                 <form action="#" method="">
                   <label for="title">Titre</label>
-                  <input type="text" />
+                  <input type="text" required />
                   <label for="category">Catégorie</label>
                   <select name="category" id="modal-category"></select>
                 </form>
