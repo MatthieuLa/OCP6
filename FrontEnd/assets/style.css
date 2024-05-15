@@ -391,6 +391,7 @@ p {
   object-fit: cover;
   height: 100%;
   width: 130px;
+  display: none;
 }
 
 /* Ligne séparatrice modal */

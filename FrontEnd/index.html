@@ -109,31 +109,34 @@
             </div>
             <h3 class="titlemodal">Ajout photo</h3>
             <div class="modal-gallery__wrapper">
-              <div class="modal-upload">
-                <img src="#" alt="" class="modal-uploaded" />
-                <i class="fa-regular fa-image upload-icon"></i>
-                <button class="btn-upload">
-                  <input
-                    type="file"
-                    id="file-input"
-                    style="display: none"
-                    accept=""
-                  />+ Ajouter photo
-                </button>
-                <p class="upload-restriction">jpg, png : 4 mo max</p>
-              </div>
-              <div class="modal-form">
-                <form action="#" method="">
+              <form action="#" class="upload-form">
+                <div class="modal-upload">
+                  <img alt="" class="modal-uploaded" />
+                  <i class="fa-regular fa-image upload-icon"></i>
+                  <button class="btn-upload" type="button">
+                    <input
+                      type="file"
+                      id="file-input"
+                      style="display: none"
+                      accept="img/jpg, img/png"
+                      name="image"
+                    />+ Ajouter photo
+                  </button>
+                  <p class="upload-restriction">jpg, png : 4 mo max</p>
+                </div>
+                <div action="#" class="modal-form">
                   <label for="title">Titre</label>
-                  <input type="text" required />
+                  <input type="text" id="title" name="title" required />
                   <label for="category">Catégorie</label>
-                  <select name="category" id="modal-category"></select>
-                </form>
-              </div>
+                  <select name="category" id="category"></select>
+                </div>
+                <div class="modal-separator"></div>
+                <hr />
+                <button class="btn-modal__validate" type="submit" disabled>
+                  Valider
+                </button>
+              </form>
             </div>
-            <div class="modal-separator"></div>
-            <hr />
-            <button class="btn-modal__validate">Valider</button>
           </div>
         </aside>
 
