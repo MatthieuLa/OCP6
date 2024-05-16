@@ -365,7 +365,7 @@ p {
 
 /* Form modal */
 
-.modal-form form {
+.modal-form {
   display: flex;
   flex-direction: column;
   text-align: left;

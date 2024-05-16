@@ -112,9 +112,7 @@ uploadForm.addEventListener("submit", (event) => {
     !formData.get("image")
   ) {
     alert("Une information est manquante au sein du formulaire.");
-    // @TODO : Si le titre est vide, afficher une erreur.
   } else {
-    // @TODO : Envoyer les données à l'API, et recevoir le nouveau "work" en réponse.
     uploadWork(formData);
   }
 });
@@ -133,19 +131,76 @@ function uploadWork(form) {
     .then((data) => {
       // @TODO : Ajouter le nouveau work aux galleries. Et la preview d'images.
       addUploadedWorkToGallery(data);
+      validateUpload();
+    })
+    .catch((error) => {
+      console.error("Erreur lors du téléchargement de l'image :", error);
     });
+
+  // Si uploadWorkInitialized est faux, on initialise les évènements.
+  if (!uploadWorkInitialized) {
+    btnUpload.addEventListener("click", () => {
+      console.log("UploadWork");
+      fileInput.click();
+      uploadIcon.style.display = "none";
+      btnUpload.style.display = "none";
+      uploadRestriction.style.display = "none";
+    });
+
+    const btnAddPhoto = document.querySelector(".btn-modal");
+    btnAddPhoto.addEventListener("click", () => {
+      const modalUpload = document.querySelector("#modal-upload");
+      modalUpload.style.display = "flex";
+    });
+
+    // Vérification de la taille du fichier
+
+    fileInput.addEventListener("change", function () {
+      const maxFileSize = 4 * 1024 * 1024; // 4MB
+      console.log("FileInput");
+
+      if (this.files[0].size > maxFileSize) {
+        alert(
+          "Le fichier est trop gros, veuillez choisir un fichier de moins de 4MB."
+        );
+        this.value = "";
+      } else {
+        log("modalUploaded");
+        const fileURL = URL.createObjectURL(this.files[0]);
+        modalUploaded.src = fileURL;
+        modalUploaded.style.display = "block";
+        // Création des éléments img et figcaption
+        const figure = document.createElement("figure");
+        const img = document.createElement("img");
+        const figCaption = document.createElement("figcaption");
+
+        // Je renseigne la source de l'image
+        img.src = fileURL;
+
+        // Je récupère la valeur de l'input dans le formulaire pour le titre
+        const titleInputValue =
+          document.querySelector('input[type="text"]').value;
+        figCaption.innerText = titleInputValue;
+
+        // J'ajoute l'img et le figcaption dans la gallery
+        figure.appendChild(img);
+        figure.appendChild(figCaption);
+        document.querySelector(".gallery").appendChild(figure);
+      }
+    });
+    // J'indique que la fonction a été initialisée. Cela évite de répéter l'ajout des évènements et d'uploader plusieurs fois le même travail.
+    uploadWorkInitialized = true;
+  }
 }
 
 function addUploadedWorkToGallery(work) {
   const gallery = document.querySelector(".gallery");
   const figureGallery = document.createElement("figure");
-  btnUpload.addEventListener("click", () => {
-    figureGallery.innerHTML = `
+  figureGallery.innerHTML = `
         <img src="${work.imageUrl}" alt="${work.title}" />
         <figcaption>${work.title}</figcaption>
         `;
-    gallery.appendChild(figureGallery);
-  });
+  gallery.appendChild(figureGallery);
 }
 
 // --------------------- Fonctions --------------------- //
@@ -186,83 +241,28 @@ function validateInputs() {
     Number(categorySelect.value) &&
     fileInput.files[0]
   ) {
-    btnValidate.style.backgroundColor = "#1D6154";
-    btnValidate.disbaled = false;
+    btnValidate.style.backgroundColor = "#1E6154";
+    btnValidate.disabled = false;
+    btnValidate.removeAttribute("disabled");
   } else {
     btnValidate.style.backgroundColor = "#A7A7A7";
-    btnValidate.disbaled = true;
+    btnValidate.disabled = true;
   }
 }
 
-/*
-function uploadWork() {
-  // Si uploadWorkInitialized est faux, on initialise les évènements.
-  if (!uploadWorkInitialized) {
-    btnUpload.addEventListener("click", () => {
-      fileInput.click();
-      uploadIcon.style.display = "none";
-      btnUpload.style.display = "none";
-      uploadRestriction.style.display = "none";
-    });
-
-    // Vérification de la taille du fichier
-
-    fileInput.addEventListener("change", function () {
-      const maxFileSize = 4 * 1024 * 1024; // 4MB
-
-      if (this.files[0].size > maxFileSize) {
-        alert(
-          "Le fichier est trop gros, veuillez choisir un fichier de moins de 4MB."
-        );
-        this.value = "";
-      } else {
-        const fileURL = URL.createObjectURL(this.files[0]);
-        modalUploaded.src = fileURL;
-        modalUploaded.style.display = "block";
-        // Création des éléments img et figcaption
-        const figure = document.createElement("figure");
-        const img = document.createElement("img");
-        const figCaption = document.createElement("figcaption");
-
-        // Je renseigne la source de l'image
-        img.src = fileURL;
-
-        // Je récupère la valeur de l'input dans le formulaire pour le titre
-        const titleInputValue =
-          document.querySelector('input[type="text"]').value;
-        figCaption.innerText = titleInputValue;
-
-        // J'ajoute l'img et le figcaption dans la gallery
-        figure.appendChild(img);
-        figure.appendChild(figCaption);
-        document.querySelector(".gallery").appendChild(figure);
-      }
-    });
-    // J'indique que la fonction a été initialisée. Cela évite de répéter l'ajout des évènements et d'uploader plusieurs fois le même travail.
-    uploadWorkInitialized = true;
-  }
-  validateUpload();
-}
 // Bouton valider pour la modal 2, il est important de le nesté ici pour bien afficher la modal
-btnValidate.addEventListener("click", validateUpload);
 
 function validateUpload(event) {
   // Empêchez l'action par défaut du bouton validate pour éviter la boucle alert
-  event.preventDefault();
-
-  // Vérification du titre
-  if (titleInput.value.trim() === "") {
-    alert("Veuillez renseigner un titre");
-    return;
+  if (event) {
+    event.preventDefault();
   }
-
   modalUploaded.style.display = "none";
   fileInput.value = "";
   uploadIcon.style.display = "block";
   btnUpload.style.display = "block";
   uploadRestriction.style.display = "block";
 }
-*/
 
 // Boutons de fermeture des modales
 
