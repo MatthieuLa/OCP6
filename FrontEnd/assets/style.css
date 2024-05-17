@@ -369,7 +369,12 @@ p {
   display: flex;
   flex-direction: column;
   text-align: left;
-  margin-top: 2em;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .modal label {

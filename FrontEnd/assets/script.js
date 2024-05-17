@@ -117,6 +117,45 @@ uploadForm.addEventListener("submit", (event) => {
   }
 });
 
+// Evènement pour afficher l'image uploadée dans la modal et alerter si le fichier est trop gros.
+
+fileInput.addEventListener("change", function () {
+  const maxFileSize = 4 * 1024 * 1024; // 4MB
+
+  if (this.files[0].size > maxFileSize) {
+    alert(
+      "Le fichier est trop gros, veuillez choisir un fichier de moins de 4MB."
+    );
+    this.value = "";
+  } else {
+    const fileURL = URL.createObjectURL(this.files[0]);
+    modalUploaded.src = fileURL;
+    modalUploaded.style.display = "block";
+    uploadIcon.style.display = "none";
+    btnUpload.style.display = "none";
+    uploadRestriction.style.display = "none";
+    // Création des éléments img et figcaption
+    const figure = document.createElement("figure");
+    const img = document.createElement("img");
+    const figCaption = document.createElement("figcaption");
+
+    // Je renseigne la source de l'image
+    img.src = fileURL;
+
+    // Je récupère la valeur de l'input dans le formulaire pour le titre
+    const titleInputValue = document.querySelector('input[type="text"]').value;
+    figCaption.innerText = titleInputValue;
+
+    // J'ajoute l'img et le figcaption dans la gallery
+    figure.appendChild(img);
+    figure.appendChild(figCaption);
+    document.querySelector(".gallery").appendChild(figure);
+  }
+  uploadWorkInitialized = true; // J'indique que la fonction a été initialisée. Cela évite de répéter l'ajout des évènements et d'uploader plusieurs fois le même travail.
+});
+
+//  --------------------- Fonctions --------------------- //
+
 function uploadWork(form) {
   const token = localStorage.getItem("token");
   fetch("http://localhost:5678/api/works", {
@@ -130,6 +169,7 @@ function uploadWork(form) {
     .then((response) => response.json())
     .then((data) => {
       // @TODO : Ajouter le nouveau work aux galleries. Et la preview d'images.
+      console.log("Travail téléchargé avec succès :", data);
       addUploadedWorkToGallery(data);
       validateUpload();
     })
@@ -142,9 +182,6 @@ function uploadWork(form) {
     btnUpload.addEventListener("click", () => {
       console.log("UploadWork");
       fileInput.click();
-      uploadIcon.style.display = "none";
-      btnUpload.style.display = "none";
-      uploadRestriction.style.display = "none";
     });
 
     const btnAddPhoto = document.querySelector(".btn-modal");
@@ -152,44 +189,6 @@ function uploadWork(form) {
       const modalUpload = document.querySelector("#modal-upload");
       modalUpload.style.display = "flex";
     });
-
-    // Vérification de la taille du fichier
-
-    fileInput.addEventListener("change", function () {
-      const maxFileSize = 4 * 1024 * 1024; // 4MB
-      console.log("FileInput");
-
-      if (this.files[0].size > maxFileSize) {
-        alert(
-          "Le fichier est trop gros, veuillez choisir un fichier de moins de 4MB."
-        );
-        this.value = "";
-      } else {
-        log("modalUploaded");
-        const fileURL = URL.createObjectURL(this.files[0]);
-        modalUploaded.src = fileURL;
-        modalUploaded.style.display = "block";
-        // Création des éléments img et figcaption
-        const figure = document.createElement("figure");
-        const img = document.createElement("img");
-        const figCaption = document.createElement("figcaption");
-
-        // Je renseigne la source de l'image
-        img.src = fileURL;
-
-        // Je récupère la valeur de l'input dans le formulaire pour le titre
-        const titleInputValue =
-          document.querySelector('input[type="text"]').value;
-        figCaption.innerText = titleInputValue;
-
-        // J'ajoute l'img et le figcaption dans la gallery
-        figure.appendChild(img);
-        figure.appendChild(figCaption);
-        document.querySelector(".gallery").appendChild(figure);
-      }
-    });
-    // J'indique que la fonction a été initialisée. Cela évite de répéter l'ajout des évènements et d'uploader plusieurs fois le même travail.
-    uploadWorkInitialized = true;
   }
 }
 
@@ -216,6 +215,7 @@ function modalCategory() {
   fetch("http://localhost:5678/api/categories")
     .then((response) => response.json())
     .then((data) => {
+      modalCategory.innerHTML = "";
       data.forEach((category) => {
         const option = document.createElement("option");
         option.value = category.id;
