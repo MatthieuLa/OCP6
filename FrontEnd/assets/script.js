@@ -13,7 +13,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if (token) {
     const openModal = document.querySelectorAll(".open-modal");
     openModal.forEach((modal) => {
-      modal.style.display = "block";
+      modal.style.display = "flex";
       modal.addEventListener("click", displayModal);
     });
   } else {
@@ -138,18 +138,9 @@ fileInput.addEventListener("change", function () {
     const figure = document.createElement("figure");
     const img = document.createElement("img");
     const figCaption = document.createElement("figcaption");
-
-    // Je renseigne la source de l'image
-    img.src = fileURL;
-
-    // Je récupère la valeur de l'input dans le formulaire pour le titre
-    const titleInputValue = document.querySelector('input[type="text"]').value;
-    figCaption.innerText = titleInputValue;
-
     // J'ajoute l'img et le figcaption dans la gallery
     figure.appendChild(img);
     figure.appendChild(figCaption);
-    document.querySelector(".gallery").appendChild(figure);
   }
   uploadWorkInitialized = true; // J'indique que la fonction a été initialisée. Cela évite de répéter l'ajout des évènements et d'uploader plusieurs fois le même travail.
 });
@@ -168,8 +159,6 @@ function uploadWork(form) {
   })
     .then((response) => response.json())
     .then((data) => {
-      // @TODO : Ajouter le nouveau work aux galleries. Et la preview d'images.
-      console.log("Travail téléchargé avec succès :", data);
       addUploadedWorkToGallery(data);
       validateUpload();
     })
@@ -225,8 +214,6 @@ function modalCategory() {
     });
 }
 
-// @TODO : Gérer la preview de l'image.
-
 const inputs = [fileInput, titleInput, categorySelect];
 for (let input of inputs) {
   input.addEventListener("input", validateInputs);
@@ -260,7 +247,7 @@ function validateUpload(event) {
   modalUploaded.style.display = "none";
   fileInput.value = "";
   uploadIcon.style.display = "block";
-  btnUpload.style.display = "block";
+  btnUpload.style.display = "flex";
   uploadRestriction.style.display = "block";
 }
 

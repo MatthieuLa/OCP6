@@ -133,19 +133,27 @@ table {
 /* * {
   border: 1px solid red !important;
 } */
-
 body {
+  margin: auto;
+  font-family: "Work Sans";
+  font-size: 14px;
+  background-color: #fffef8;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  margin: 50px 0;
+}
+
+.header-main__container {
   max-width: 1140px;
   margin: auto;
   font-family: "Work Sans";
   font-size: 14px;
   background-color: #fffef8;
 }
-header {
-  display: flex;
-  justify-content: space-between;
-  margin: 50px 0;
-}
+
 section {
   margin: 50px 0;
 }
@@ -223,6 +231,19 @@ li:hover {
 
 /* Modal */
 
+.modal-bar__top {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000;
+  height: 60px;
+  color: #fff;
+  gap: 1em;
+}
+.modal-bar__top i {
+  margin-top: 10px;
+}
+
 .modal-header {
   display: flex;
   justify-content: center;
@@ -287,7 +308,6 @@ p {
 
 .modal-gallery__wrapper {
   width: 461px;
-  height: 407px;
   margin-bottom: 2em;
 }
 
@@ -350,8 +370,8 @@ p {
   cursor: pointer;
   color: #306685;
   background-color: #cbd6dc;
-  padding: 1em;
-  border-radius: 20px;
+  padding: 5px;
+  border-radius: 30px;
   border: none;
   font-family: "Syne", sans-serif;
   margin-top: 1em;
@@ -364,6 +384,10 @@ p {
 }
 
 /* Form modal */
+
+/* * {
+  border: 1px solid red !important;
+} */
 
 .modal-form {
   display: flex;
@@ -405,6 +429,14 @@ p {
   background-color: #b3b3b3;
   height: 1px;
   width: 77%;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.modal-separator.upload {
+  background-color: #b3b3b3;
+  height: 1px;
+  width: 100%;
   margin-top: 2em;
   margin-bottom: 2em;
 }
@@ -527,8 +559,6 @@ input[type="submit"] {
 
 footer {
   background-color: #fff;
-  height: 60px;
-  width: 1440px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
