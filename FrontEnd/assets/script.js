@@ -5,12 +5,13 @@ let uploadWorkInitialized = false; // Variable pour savoir si la fonction upload
 
 // ---------------------  DOM Listener --------------------- //
 
-// Evènement pour executer le code une fois que le DOM est chargé.
+// Evènement pour executer le code une fois que le DOM est chargé afin d'éviter les erreurs d'exécution.
 window.addEventListener("DOMContentLoaded", () => {
   // Récupère le jeton d'authentification dans le stockage local.
   const token = localStorage.getItem("token");
   getWorks();
   if (token) {
+    // Si un jeton d'authentification est présent, j'affiche la modal dans l'index.html et j'ajoute l'event listener pour l'afficher lors du clique.
     const openModal = document.querySelectorAll(".open-modal");
     openModal.forEach((modal) => {
       modal.style.display = "flex";
@@ -23,6 +24,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 // ---------------------  Modal --------------------- //
 
+// Fonction pour afficher la modal
 function displayModal() {
   const modal = document.querySelector(".modal");
   modal.style.display = "flex";
@@ -32,6 +34,7 @@ function displayModal() {
 
 // ---------------------  Fetch Modal --------------------- //
 
+// Je fetch les travaux à partir de swagger.
 fetch("http://localhost:5678/api/works")
   .then((response) => response.json())
   .then((works) => {
@@ -50,7 +53,7 @@ fetch("http://localhost:5678/api/works")
 
       // -------------- Supprimer un travail depuis la modal -------------- //
 
-      // J'intégre le bouton de suppression dans la modal à partir du fetch de l'api pour que cela fonctionne
+      // J'intégre le bouton de suppression dans la modal à partir du fetch de l'api pour que cela fonctionne.
 
       const trashModal = figureGallery.querySelector(".modal-trash");
       trashModal.addEventListener("click", () => {
@@ -128,6 +131,7 @@ fileInput.addEventListener("change", function () {
     );
     this.value = "";
   } else {
+    // Affichage de l'image uploadée dans la modal et masquage des éléments inutiles pour laisser place à l'image.
     const fileURL = URL.createObjectURL(this.files[0]);
     modalUploaded.src = fileURL;
     modalUploaded.style.display = "block";
@@ -149,8 +153,8 @@ fileInput.addEventListener("change", function () {
 
 function uploadWork(form) {
   const token = localStorage.getItem("token");
+  // J'utilsie la méthode post pour envoyer les données du formulaire vers l'API.
   fetch("http://localhost:5678/api/works", {
-    // a remplire avec le bon fetch.
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -159,6 +163,7 @@ function uploadWork(form) {
   })
     .then((response) => response.json())
     .then((data) => {
+      // Si la réponse est ok, j'ajoute le travail uploadé à la galerie et je valide l'upload.
       addUploadedWorkToGallery(data);
       validateUpload();
     })
@@ -181,6 +186,7 @@ function uploadWork(form) {
   }
 }
 
+// Fonction pour ajouter un travail uploadé à la galerie.
 function addUploadedWorkToGallery(work) {
   const gallery = document.querySelector(".gallery");
   const figureGallery = document.createElement("figure");
@@ -219,10 +225,9 @@ for (let input of inputs) {
   input.addEventListener("input", validateInputs);
 }
 
+// Function qui valide les inputs dans le form de la modal 2 pour uploder un travail.
+
 function validateInputs() {
-  console.log(!!titleInput.value.trim());
-  console.log(!!Number(categorySelect.value));
-  console.log(!!fileInput.files[0]);
   if (
     titleInput.value.trim() &&
     Number(categorySelect.value) &&
@@ -240,7 +245,7 @@ function validateInputs() {
 // Bouton valider pour la modal 2, il est important de le nesté ici pour bien afficher la modal
 
 function validateUpload(event) {
-  // Empêchez l'action par défaut du bouton validate pour éviter la boucle alert
+  // Empêchez l'action par défaut du bouton validate pour éviter la boucle alert.
   if (event) {
     event.preventDefault();
   }
@@ -282,21 +287,22 @@ function btnModal() {
   });
 }
 
-// Fonction pour revenir à la galerie depuis la modal 2
+// Fonction pour revenir à la galerie depuis la modal 2 en cliquant sur la flèche de retour.
 
 function backToGallery() {
   const backButton = document.querySelector(".btn-back");
   backButton.onclick = () => {
-    modalGallery.style.display = null;
+    modalGallery.style.display = "flex";
     modalGallery.setAttribute("aria-modal", true);
     modalGallery.removeAttribute("aria-hidden");
+    // Je cache la modal 2 en changeant  display à none.
     modalUpload.style.display = "none";
     modalUpload.setAttribute("aria-hidden", true);
     modalUpload.removeAttribute("aria-modal");
   };
 }
 
-// Fonction pour récupérer les travaux.
+// Fonction pour récupérer les travaux à partir du fetch works de l'api swagger.
 
 function getWorks() {
   fetch("http://localhost:5678/api/works")
@@ -304,7 +310,6 @@ function getWorks() {
     .then((data) => {
       works = data;
       renderWorks(works);
-      // renderWorksInModal(works);
     });
 }
 
@@ -339,7 +344,7 @@ function getCategories() {
       // Ajout de l'évènement pour afficher tous les travaux.
       const filterAll = document.querySelector(".all");
       filterAll.addEventListener("click", getWorks);
-      // Ajout des filtres de catégories.
+      // Ajout des filtres de catégories quand l'utilisateur n'est pas logué.
       data.forEach((category) => {
         const option = document.createElement("button");
         option.value = category.id;
@@ -359,6 +364,8 @@ function filterGallery(categoryId) {
   // On affiche les travaux filtrés.
   renderWorks(filteredWorks);
 }
+
+// Fonction pour supprimer un travail.
 
 async function deleteWork(id) {
   // Exemple de requête DELETE avec le jeton d'authentification passé en en-tête.

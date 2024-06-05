@@ -1,5 +1,3 @@
-console.log("test");
-
 // Form login
 const loginForm = document.querySelector("#contact");
 loginForm.addEventListener("submit", (event) => {
@@ -8,6 +6,7 @@ loginForm.addEventListener("submit", (event) => {
   const email = document.querySelector("#email").value;
   const password = document.querySelector("#password").value;
 
+  // Affiche les données dans la console pour vérification
   console.log(`Email: ${email}`);
   console.log(`Password: ${password}`);
 
@@ -33,6 +32,7 @@ loginForm.addEventListener("submit", (event) => {
       }
     })
     .then((data) => {
+      // Je récupère le token et le stocke dans le local storage
       const token = data.token;
       localStorage.setItem("token", token);
       window.location.href = `index.html`;
